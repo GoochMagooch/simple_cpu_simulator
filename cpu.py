@@ -10,6 +10,22 @@ def run_cpu(instructions):
     if not instructions:
         return "Error: no instructions given, ending program..."
     
+    # checks for valid initial LOAD, valid register or missing register
+    first_ins = instructions[0]
+    if not first_ins.startswith("LOAD"):
+        return "Failed to load integer: Set 'LOAD x' as first instruction."
+    else:
+        if " " in first_ins:
+            if len(first_ins.split()) == 1:
+                return "Error: missing register, program halted"
+            else:
+                if not first_ins[first_ins.index(" ")+1:].isdigit():
+                    return f"Error: program can only load numbers, program halted"
+                else:
+                    register = int(instructions[0][instructions[0].index(" ")+1:])
+        else:
+            return "Error: format LOAD instruction as 'LOAD x'"
+    
     # checks for valid instructions
     for i in instructions:
         if " " in i:
@@ -24,27 +40,15 @@ def run_cpu(instructions):
                     return reg_output + [f"Error: invalid instruction - {i[:i.index(' ')]}"]
                 else:
                     return f"Error: invalid instruction - {i[:i.index(' ')]}"
-
-    # checks for initial register
-    if not instructions[0].startswith("LOAD"):
-        return "Failed to load integer: Set 'LOAD x' as first instruction."
-    else:
-        register = int(instructions[0][instructions[0].index(" ")+1:])
     
     # checks for multiple registers
-    for i in range(1, len(instructions)):
-        if " " in instructions[i]:
-            if instructions[i][0:instructions[i].index(" ")] == "LOAD":
-                if reg_output:
-                    return reg_output + ["Error: cannot load multiple registers - program was halted"]
-                else:
-                    return "Error: cannot load multiple registers - program was halted"
+    for i in instructions[1:]:
+        if " " in instructions:
+            if i.split()[0] == "LOAD":
+                return "Error: cannot load multiple registers - program was halted"
         else:
-            if instructions[i] == "LOAD":
-                if reg_output:
-                    return reg_output + ["Error: cannot load multiple registers - program was halted"]
-                else:
-                    return "Error: cannot load multiple registers - program was halted"
+            if i == "LOAD":
+                return "Error: cannot load multiple registers - program was halted"
             
     # runs instructions against loaded register
     stored = {}
