@@ -29,17 +29,11 @@ def run_cpu(instructions):
     # checks for valid instructions
     for i in instructions:
         if " " in i:
-            if i[0:i.index(" ")] not in instruction_set:
-                if reg_output:
-                    return reg_output + [f"Error: invalid instruction - {i[:i.index(' ')]}"]
-                else:
-                    return f"Error: invalid instruction - {i[:i.index(' ')]}"
+            if i[:i.index(" ")] not in instruction_set:
+                return f"Error: invalid instruction - {i[:i.index(' ')]}"
         else:
             if i not in instruction_set:
-                if reg_output:
-                    return reg_output + [f"Error: invalid instruction - {i[:i.index(' ')]}"]
-                else:
-                    return f"Error: invalid instruction - {i[:i.index(' ')]}"
+                return f"Error: invalid instruction - {i[:i.index(' ')]}"
     
     # checks for multiple registers
     for i in instructions[1:]:
