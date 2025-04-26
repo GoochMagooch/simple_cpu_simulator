@@ -1,5 +1,5 @@
 # list of instructions for validity checks
-instruction_set = ["LOAD", "MUL", "DIV", "ADD", "SUB", "PRINT", "HALT", "STORE", "LOADVAR"]
+instruction_set = ["LOAD", "MUL", "DIV", "ADD", "SUB", "PRINT", "END", "STORE", "LOADVAR"]
 
 # function that runs basic instructions
 def run_cpu(instructions):
@@ -8,29 +8,31 @@ def run_cpu(instructions):
 
     # checks for empty instructions list
     if not instructions:
-        return "Error: no instructions given, ending program..."
+        return "Error: no instructions given"
     
-    # checks for valid initial LOAD, valid register or missing register
+    # checks for valid LOAD placement, valid register or missing register
     first_ins = instructions[0]
     if not first_ins.startswith("LOAD"):
-        return "Failed to load integer: Set 'LOAD x' as first instruction."
+        return "Failed to load register: Set 'LOAD x' as first instruction."
     else:
         if " " in first_ins:
             if len(first_ins.split()) == 1:
-                return "Error: missing register, program halted"
+                return "Error: missing register value - Set register with 'LOAD x'"
             else:
                 if not first_ins[first_ins.index(" ")+1:].isdigit():
-                    return f"Error: program can only load numbers, program halted"
+                    return f"Error: load int as register value"
                 else:
                     register = int(instructions[0][instructions[0].index(" ")+1:])
         else:
-            return "Error: format LOAD instruction as 'LOAD x'"
+            return "Format error: Set LOAD instruction as 'LOAD x'"
     
     # checks for valid instructions
-    for i in instructions:
+    for i in instructions[1:]:
         if " " in i:
             if i[:i.index(" ")] not in instruction_set:
                 return f"Error: invalid instruction - {i[:i.index(' ')]}"
+            elif i[-1] == " ":
+                return "Error: Remove space from end of instruction - {i}"
         else:
             if i not in instruction_set:
                 return f"Error: invalid instruction - {i[:i.index(' ')]}"
@@ -47,8 +49,8 @@ def run_cpu(instructions):
     # runs instructions against loaded register
     stored = {}
     for i in instructions[1:]:
-        if i == "HALT":
-            return reg_output + ["Program was halted"]
+        if i == "END":
+            return reg_output + ["Program successfully ended"]
         elif i == "PRINT":
             reg_output.append(register)
         elif i.startswith("MUL"):
@@ -76,22 +78,10 @@ def run_cpu(instructions):
                 else:
                     return f"Variable '{i.split()[1]}' not found, program was halted"
     return reg_output
+
+# Instructions for testing
+testing = ["LOAD 20", "STORE x", "ADD 5", "LOADVAR x", 
+           "ADD 10", "STORE y", "ADD 20", 
+           "LOADVAR x", "PRINT", "END"]
  
-store_loadvar_test = ["LOAD 20", "PRINT", 
-                      "STORE x", "ADD 5", "PRINT", 
-                      "LOADVAR x", "PRINT", 
-                      "ADD 10", "PRINT", 
-                      "STORE y", "ADD 20", "PRINT", 
-                      "LOADVAR x", "PRINT", 
-                      "LOADVAR e", "PRINT", 
-                      "HALT"] # should return [20, 25, 20, 30, 50, 20, "Variable 'e' not found", 20, "Program was halted"]
-store_loadvar_emptylst_test = ["LOAD 20", 
-                      "STORE x", "ADD 5", 
-                      "LOADVAR x", 
-                      "ADD 10", 
-                      "STORE y", "ADD 20", 
-                      "LOADVAR x", 
-                      "LOADVAR e", "PRINT", "HALT"] # should return "Variable 'e' not found, program was halted"
- 
-print(run_cpu(store_loadvar_test))
-print(run_cpu(store_loadvar_emptylst_test))
+print(run_cpu(testing))
