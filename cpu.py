@@ -46,11 +46,15 @@ def run_cpu(instructions):
             if i == "LOAD":
                 return "Error: cannot load multiple registers - program was halted"
             
+    # checks if program ends properly
+    if not instructions[-1].startswith("END"):
+        return "Error: program not ended properly - set last instruction to 'END'"
+
     # runs instructions against loaded register
     stored = {}
     for i in instructions[1:]:
         if i == "END":
-            return reg_output + ["Program successfully ended"]
+            return reg_output + ["Program ended successfully"]
         elif i == "PRINT":
             reg_output.append(register)
         elif i.startswith("MUL"):
