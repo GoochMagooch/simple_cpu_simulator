@@ -12,10 +12,9 @@ char* run_cpu(char** instructions) {
 
     for (int i = 0; i < 100; i++) {
         if (instructions[i] == "END") {
-            printf("Program ended\n");
+            reg_output = realloc(reg_output, (i + 1) * sizeof(char*));
+            reg_output[i] = "Program ended";
             return 0;
-        } else {
-            printf("%s, ", instructions[i]);
         }
     }
     return 0;
