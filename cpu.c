@@ -1,6 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+// int number = 69;
+// char buffer[20];
+// sprintf(buffer, "%d", number); converts int to string
+// printf("String version: %d: ", buffer)
+
 char* run_cpu(char** instructions) {
     for (int i = 0; i < 100; i++) {
         if (instructions[i] == "END") {
