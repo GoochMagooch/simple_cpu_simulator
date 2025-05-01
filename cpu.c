@@ -7,6 +7,9 @@
 // printf("String version: %d: ", buffer)
 
 char* run_cpu(char** instructions) {
+    char* reg_output[100];
+    int regis = 0;
+
     for (int i = 0; i < 100; i++) {
         if (instructions[i] == "END") {
             printf("Program ended\n");
@@ -15,7 +18,6 @@ char* run_cpu(char** instructions) {
             printf("%s, ", instructions[i]);
         }
     }
-    // printf("%s", instructions[1]);
     return 0;
 }
 
